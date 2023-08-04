@@ -31,11 +31,19 @@ def show_dessert_menu():
     print("Press 3 to add fruit to your order $6")
     print("Press 0 if you don't want any dessert")
     
+
 def get_user_choice():
     """This function reads the user choice and returns it
-    Assume the user will always enter valid values"""
-    choice = int(input("Choice: "))
-    return choice
+    It also includes error handling for values less than 0 and greater than 3
+    """
+    while True:
+        try:
+            choice = int(input("Choice: "))
+            if choice < 0 or choice > 3:
+                raise ValueError("Please enter a number between 0 and 3.")
+            return choice
+        except ValueError as ve:
+            print(ve)
 
 def get_total_price(food_choice, drink_choice, dessert_choice):
     """Function calculates the prices
@@ -46,8 +54,17 @@ def get_total_price(food_choice, drink_choice, dessert_choice):
     return price
 
 def print_total_price(total_price):
-    """this fucntion just prints a friendly message with the
-    final price for the customer
+    """This function asks the user for a file name and saves the final price to the file.
+    If the file already exists, it prompts the user to enter a different file name.
     """
-    print("Thanks for buying our food. Your bill is $", total_price)
-
+    while True:
+        file_name = input("Enter the name of the file to save the results: ")
+        try:
+            with open(file_name, 'x') as file:
+                file.write("Thanks for buying our food. Your bill is $" + str(total_price))
+                print("Results saved successfully to", file_name)
+                break
+        except FileExistsError:
+            print("File already exists. Please enter a different file name.")
+        except Exception as e:
+            print("An error occurred:", e)
